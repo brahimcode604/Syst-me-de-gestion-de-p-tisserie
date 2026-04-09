@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<t t-name="bakery_management.BakeryDashboard">
+<div class="bk-dashboard">
+
+    <!-- ═══ LOADING ════════════════════════════════════════════════════════ -->
+    <t t-if="state.loading">
+        <div class="bk-loading">
+            <div class="bk-spinner"/>
+            <p>Chargement du tableau de bord…</p>
+        </div>
+    </t>
+
+    <!-- ═══ CONTENU PRINCIPAL ══════════════════════════════════════════════ -->
+    <t t-else="">
+
+        <!-- En-tête -->
+        <div class="bk-header">
+            <div class="bk-header-left">
+                <span class="bk-logo">🍰</span>
+                <div>
+                    <h1 class="bk-title">Tableau de bord</h1>
+                    <p class="bk-subtitle">Système de Gestion de Pâtisserie</p>
+                </div>
+            </div>
+            <div class="bk-header-right">
+                <button class="bk-btn-primary" t-on-click="openNewOrder">
+                    ＋ Nouvelle commande
+                </button>
+            </div>
+        </div>
+
+        <!-- ── KPI Cards ─────────────────────────────────────────────── -->
+        <div class="bk-kpi-grid">
+
+            <div class="bk-kpi bk-kpi-blue" t-on-click="openOrders">
+                <div class="bk-kpi-icon">📋</div>
+                <div class="bk-kpi-body">
+                    <div class="bk-kpi-value" t-esc="state.orders_today"/>
+                    <div class="bk-kpi-label">Commandes aujourd'hui</div>
+                </div>
+                <div class="bk-kpi-arrow">→</div>
+            </div>
+
+            <div class="bk-kpi bk-kpi-green" t-on-click="openOrders">
+                <div class="bk-kpi-icon">💰</div>
+                <div class="bk-kpi-body">
+                    <div class="bk-kpi-value bk-kpi-value-sm"
+                         t-esc="formatCurrency(state.revenue_this_month)"/>
+                    <div class="bk-kpi-label">CA ce mois (livrées)</div>
+                </div>
+                <div class="bk-kpi-arrow">→</div>
+            </div>
+
+            <div class="bk-kpi bk-kpi-orange" t-on-click="openPendingOrders">
+                <div class="bk-kpi-icon">⏳</div>
+                <div class="bk-kpi-body">
+                    <div class="bk-kpi-value" t-esc="state.pending_orders"/>
+                    <div class="bk-kpi-label">Commandes en cours</div>
+                </div>
+                <div class="bk-kpi-arrow">→</div>
+            </div>
+
+            <div class="bk-kpi bk-kpi-purple" t-on-click="openOrders">
+                <div class="bk-kpi-icon">📅</div>
+                <div class="bk-kpi-body">
+                    <div class="bk-kpi-value" t-esc="state.orders_this_month"/>
+                    <div class="bk-kpi-label">Commandes ce mois</div>
+                </div>
+                <div class="bk-kpi-arrow">→</div>
+            </div>
+
+            <div class="bk-kpi bk-kpi-red" t-on-click="openLowStock">
+                <div class="bk-kpi-icon">⚠️</div>
+                <div class="bk-kpi-body">
+                    <div class="bk-kpi-value" t-esc="state.low_stock_count"/>
+                    <div class="bk-kpi-label">Alertes de stock</div>
+                </div>
+                <div class="bk-kpi-arrow">→</div>
+            </div>
+
+        </div>
+
+        <!-- ── Grille principale ─────────────────────────────────────── -->
+        <div class="bk-main-grid">
+
+            <!-- Commandes récentes -->
+            <div class="bk-card bk-card-orders">
+                <div class="bk-card-header">
+                    <h2>📝 Commandes récentes</h2>
+                    <button class="bk-btn-outline" t-on-click="openOrders">Voir tout →</button>
+                </div>
+                <div class="bk-card-body">
+                    <t t-if="state.recent_orders.length === 0">
+                        <div class="bk-empty">
+                            <span>📭</span>
+                            <p>Aucune commande pour le moment</p>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <table class="bk-table">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Client</th>
+                                    <th>Total</th>
+                                    <th>État</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.recent_orders" t-as="order" t-key="order.id">
+                                    <tr class="bk-row-clickable"
+                                        t-on-click="() => openOrder(order.id)">
+                                        <td><strong t-esc="order.name"/></td>
+                                        <td t-esc="order.partner_id[1]"/>
+                                        <td><strong t-esc="formatCurrency(order.amount_total)"/></td>
+                                        <td>
+                                            <span t-att-class="'bk-badge ' + getStateClass(order.state)"
+                                                  t-esc="getStateLabel(order.state)"/>
+                                        </td>
+                                        <td t-esc="formatDate(order.date_order)"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Alertes Stock -->
+            <div class="bk-card bk-card-stock">
+                <div class="bk-card-header">
+                    <h2>⚠️ Alertes Stock</h2>
+                    <button class="bk-btn-outline" t-on-click="openIngredients">Gérer →</button>
+                </div>
+                <div class="bk-card-body">
+                    <t t-if="state.low_stock_items.length === 0">
+                        <div class="bk-empty bk-empty-success">
+                            <span>✅</span>
+                            <p>Tous les stocks sont suffisants</p>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="bk-stock-list">
+                            <t t-foreach="state.low_stock_items" t-as="item" t-key="item.id">
+                                <div t-att-class="'bk-stock-item ' + (item.stock_status === 'empty' ? 'bk-stock-empty' : 'bk-stock-low')">
+                                    <div class="bk-stock-info">
+                                        <span class="bk-stock-name" t-esc="item.name"/>
+                                        <span class="bk-stock-qty">
+                                            <t t-esc="item.quantity_on_hand"/> /
+                                            <t t-esc="item.minimum_quantity"/>
+                                            <t t-esc="item.unit_of_measure"/>
+                                        </span>
+                                    </div>
+                                    <span t-att-class="'bk-stock-badge ' + (item.stock_status === 'empty' ? 'bk-badge-empty' : 'bk-badge-low')">
+                                        <t t-if="item.stock_status === 'empty'">Vide</t>
+                                        <t t-else="">Faible</t>
+                                    </span>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── Actions rapides ───────────────────────────────────────── -->
+        <div class="bk-quick-actions">
+            <h2 class="bk-section-title">⚡ Actions rapides</h2>
+            <div class="bk-qa-grid">
+                <button class="bk-qa-btn" t-on-click="openNewOrder">
+                    <span class="bk-qa-icon">➕</span>
+                    <span>Nouvelle commande</span>
+                </button>
+                <button class="bk-qa-btn" t-on-click="openProducts">
+                    <span class="bk-qa-icon">🎂</span>
+                    <span>Catalogue produits</span>
+                </button>
+                <button class="bk-qa-btn" t-on-click="openIngredients">
+                    <span class="bk-qa-icon">🧂</span>
+                    <span>Gérer le stock</span>
+                </button>
+                <button class="bk-qa-btn" t-on-click="openCustomers">
+                    <span class="bk-qa-icon">👥</span>
+                    <span>Clients</span>
+                </button>
+                <button class="bk-qa-btn" t-on-click="openPendingOrders">
+                    <span class="bk-qa-icon">⏳</span>
+                    <span>Commandes en cours</span>
+                </button>
+                <button class="bk-qa-btn" t-on-click="openLowStock">
+                    <span class="bk-qa-icon">⚠️</span>
+                    <span>Alertes stock</span>
+                </button>
+            </div>
+        </div>
+
+    </t><!-- /t-else loading -->
+
+</div><!-- /.bk-dashboard -->
+</t><!-- /t-name -->
+</templates>

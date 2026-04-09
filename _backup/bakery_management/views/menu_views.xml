@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══ Actions ══════════════════════════════════════════════════════ -->
+
+        <record id="action_bakery_order" model="ir.actions.act_window">
+            <field name="name">Commandes</field>
+            <field name="res_model">bakery.order</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="context">{'search_default_active_orders': 1}</field>
+        </record>
+
+        <record id="action_bakery_ingredient" model="ir.actions.act_window">
+            <field name="name">Ingrédients</field>
+            <field name="res_model">bakery.ingredient</field>
+            <field name="view_mode">list,kanban,form</field>
+        </record>
+
+        <record id="action_bakery_product" model="ir.actions.act_window">
+            <field name="name">Produits</field>
+            <field name="res_model">bakery.product</field>
+            <field name="view_mode">kanban,list,form</field>
+        </record>
+
+        <record id="action_bakery_customer" model="ir.actions.act_window">
+            <field name="name">Clients Pâtisserie</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('is_bakery_customer', '=', True)]</field>
+            <field name="context">{'default_is_bakery_customer': True}</field>
+        </record>
+
+        <record id="action_bakery_low_stock" model="ir.actions.act_window">
+            <field name="name">⚠️ Alertes Stock</field>
+            <field name="res_model">bakery.ingredient</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('stock_status', 'in', ['low', 'empty'])]</field>
+        </record>
+
+        <!-- ═══ Menu Principal ════════════════════════════════════════════ -->
+
+        <menuitem
+            id="menu_bakery_main"
+            name="🍰 Pâtisserie"
+            sequence="10"
+            web_icon="bakery_management,static/description/icon.png"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <!-- Tableau de bord -->
+        <menuitem
+            id="menu_bakery_dashboard"
+            name="Tableau de bord"
+            parent="menu_bakery_main"
+            action="action_bakery_dashboard"
+            sequence="1"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <!-- ═══ Commandes ════════════════════════════════════════════════ -->
+
+        <menuitem
+            id="menu_bakery_orders"
+            name="Commandes"
+            parent="menu_bakery_main"
+            sequence="2"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <menuitem
+            id="menu_bakery_order_all"
+            name="Toutes les commandes"
+            parent="menu_bakery_orders"
+            action="action_bakery_order"
+            sequence="1"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <!-- ═══ Catalogue ════════════════════════════════════════════════ -->
+
+        <menuitem
+            id="menu_bakery_catalogue"
+            name="Catalogue"
+            parent="menu_bakery_main"
+            sequence="3"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <menuitem
+            id="menu_bakery_product_all"
+            name="Produits &amp; Recettes"
+            parent="menu_bakery_catalogue"
+            action="action_bakery_product"
+            sequence="1"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <!-- ═══ Stock ════════════════════════════════════════════════════ -->
+
+        <menuitem
+            id="menu_bakery_stock"
+            name="Stock"
+            parent="menu_bakery_main"
+            sequence="4"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <menuitem
+            id="menu_bakery_ingredient_all"
+            name="Ingrédients"
+            parent="menu_bakery_stock"
+            action="action_bakery_ingredient"
+            sequence="1"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <menuitem
+            id="menu_bakery_low_stock"
+            name="⚠️ Alertes Stock"
+            parent="menu_bakery_stock"
+            action="action_bakery_low_stock"
+            sequence="2"
+            groups="bakery_management.group_bakery_employee"/>
+
+        <!-- ═══ Clients ══════════════════════════════════════════════════ -->
+
+        <menuitem
+            id="menu_bakery_customers"
+            name="Clients"
+            parent="menu_bakery_main"
+            action="action_bakery_customer"
+            sequence="5"
+            groups="bakery_management.group_bakery_employee"/>
+
+    </data>
+</odoo>

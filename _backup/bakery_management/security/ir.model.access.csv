@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bakery_ingredient_employee,bakery.ingredient employee,model_bakery_ingredient,bakery_management.group_bakery_employee,1,1,0,0
+access_bakery_ingredient_admin,bakery.ingredient admin,model_bakery_ingredient,bakery_management.group_bakery_admin,1,1,1,1
+access_bakery_product_employee,bakery.product employee,model_bakery_product,bakery_management.group_bakery_employee,1,0,0,0
+access_bakery_product_admin,bakery.product admin,model_bakery_product,bakery_management.group_bakery_admin,1,1,1,1
+access_bakery_recipe_line_employee,bakery.recipe.line employee,model_bakery_recipe_line,bakery_management.group_bakery_employee,1,0,0,0
+access_bakery_recipe_line_admin,bakery.recipe.line admin,model_bakery_recipe_line,bakery_management.group_bakery_admin,1,1,1,1
+access_bakery_order_employee,bakery.order employee,model_bakery_order,bakery_management.group_bakery_employee,1,1,1,0
+access_bakery_order_admin,bakery.order admin,model_bakery_order,bakery_management.group_bakery_admin,1,1,1,1
+access_bakery_order_line_employee,bakery.order.line employee,model_bakery_order_line,bakery_management.group_bakery_employee,1,1,1,1
+access_bakery_order_line_admin,bakery.order.line admin,model_bakery_order_line,bakery_management.group_bakery_admin,1,1,1,1

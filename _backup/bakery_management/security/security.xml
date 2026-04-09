@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══ Catégorie du module ════════════════════════════════════════ -->
+        <record id="module_bakery_category" model="ir.module.category">
+            <field name="name">Pâtisserie</field>
+            <field name="description">Gestion complète d'une pâtisserie</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- ═══ Groupe Employé ════════════════════════════════════════════ -->
+        <record id="group_bakery_employee" model="res.groups">
+            <field name="name">Employé</field>
+            <field name="category_id" ref="module_bakery_category"/>
+            <field name="comment">
+                Peut consulter le catalogue, créer et modifier des commandes.
+                Accès en lecture aux ingrédients et au stock.
+            </field>
+        </record>
+
+        <!-- ═══ Groupe Administrateur ════════════════════════════════════ -->
+        <record id="group_bakery_admin" model="res.groups">
+            <field name="name">Administrateur</field>
+            <field name="category_id" ref="module_bakery_category"/>
+            <field name="implied_ids" eval="[(4, ref('group_bakery_employee'))]"/>
+            <field name="comment">
+                Accès complet : gestion des ingrédients, produits, recettes,
+                commandes, facturation et configuration.
+            </field>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+
+    </data>
+</odoo>
