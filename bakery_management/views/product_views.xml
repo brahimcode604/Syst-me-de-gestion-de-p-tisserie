@@ -1,0 +1,176 @@
+<!-- TODO: ameliorer l'affichage kanban -->
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE KANBAN — Produits (vue principale)
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_product_kanban" model="ir.ui.view">
+            <field name="name">bakery.product.kanban</field>
+            <field name="model">bakery.product</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="sale_price"/>
+                    <field name="cost_price"/>
+                    <field name="margin"/>
+                    <field name="image_1920"/>
+                    <field name="order_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click"
+                                 style="border-radius:12px;overflow:hidden;padding:0;">
+                                <!-- Image produit -->
+                                <div style="height:140px;overflow:hidden;">
+                                    <img t-if="record.image_1920.raw_value"
+                                         t-att-src="'data:image/png;base64,' + record.image_1920.raw_value"
+                                         style="width:100%;height:140px;object-fit:cover;"/>
+                                    <div t-else=""
+                                         style="height:140px;background:linear-gradient(135deg,#fef3e2 0%,#fde8c8 100%);display:flex;align-items:center;justify-content:center;font-size:52px;">
+                                        🍰
+                                    </div>
+                                </div>
+                                <!-- Contenu -->
+                                <div class="oe_kanban_content p-3">
+                                    <div class="o_kanban_record_title">
+                                        <strong style="font-size:15px;">
+                                            <t t-esc="record.name.value"/>
+                                        </strong>
+                                    </div>
+                                    <small class="text-muted">
+                                        <t t-esc="record.category.value"/>
+                                    </small>
+                                    <div class="o_kanban_record_bottom mt-2">
+                                        <div class="oe_kanban_bottom_left">
+                                            <strong style="color:#c8956c;font-size:17px;">
+                                                <t t-esc="record.sale_price.value"/> MAD
+                                            </strong>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span class="badge text-bg-light"
+                                                  style="font-size:11px;">
+                                                Marge <t t-esc="Math.round(record.margin.raw_value)"/>%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE LIST — Produits
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_product_list" model="ir.ui.view">
+            <field name="name">bakery.product.list</field>
+            <field name="model">bakery.product</field>
+            <field name="arch" type="xml">
+                <list string="Produits">
+                    <field name="image_1920" widget="image" options="{'size': [38, 38]}"/>
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="sale_price" string="Prix vente (MAD)"/>
+                    <field name="cost_price" string="Coût revient (MAD)"/>
+                    <field name="margin" string="Marge (%)"/>
+                    <field name="preparation_time" string="Prépa (h)"/>
+                    <field name="order_count" string="Commandes"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE FORM — Produit
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_product_form" model="ir.ui.view">
+            <field name="name">bakery.product.form</field>
+            <field name="model">bakery.product</field>
+            <field name="arch" type="xml">
+                <form string="Produit de Pâtisserie">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_orders" type="object"
+                                    class="oe_stat_button" icon="fa-shopping-cart">
+                                <field name="order_count" widget="statinfo" string="Commandes"/>
+                            </button>
+                        </div>
+                        <field name="image_1920" widget="image" class="oe_avatar"
+                               options="{'preview_image': 'image_1920'}"/>
+                        <div class="oe_title">
+                            <label for="name" string="Nom du produit"/>
+                            <h1>
+                                <field name="name" placeholder="Ex : Mille-feuille vanille"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Classification">
+                                <field name="category"/>
+                                <field name="preparation_time"
+                                       string="Temps de préparation (h)"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Tarification">
+                                <field name="sale_price" string="Prix de vente (MAD)"/>
+                                <field name="cost_price" readonly="1"
+                                       string="Coût de revient (MAD)"/>
+                                <field name="margin" readonly="1" string="Marge (%)"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1"
+                                   placeholder="Description et présentation du produit..."/>
+                        </group>
+                        <notebook>
+                            <!-- Recette -->
+                            <page string="🥄 Recette" name="recipe">
+                                <field name="recipe_line_ids">
+                                    <list editable="bottom">
+                                        <field name="ingredient_id"/>
+                                        <field name="quantity"/>
+                                        <field name="unit_of_measure" readonly="1"/>
+                                        <field name="subtotal" readonly="1"
+                                               string="Coût (MAD)"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="cost_price" readonly="1"
+                                           string="Coût total recette (MAD)"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE SEARCH — Produits
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_product_search" model="ir.ui.view">
+            <field name="name">bakery.product.search</field>
+            <field name="model">bakery.product</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher un produit">
+                    <field name="name" string="Produit"/>
+                    <filter name="archived" string="Archivés"
+                            domain="[('active', '=', False)]"/>
+                    <group expand="1" string="Grouper par">
+                        <filter name="by_category" string="Catégorie"
+                                context="{'group_by': 'category'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>
