@@ -1,0 +1,115 @@
+<!-- TODO: ajouter le graphique historique -->
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             Héritage du formulaire Partenaire — Onglet Pâtisserie
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_res_partner_form_bakery" model="ir.ui.view">
+            <field name="name">res.partner.form.bakery</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Bouton statistique dans la boîte de boutons -->
+                <div name="button_box" position="inside">
+                    <button name="action_view_bakery_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-shopping-basket"
+                            invisible="not is_bakery_customer">
+                        <field name="bakery_order_count"
+                               widget="statinfo"
+                               string="Commandes"/>
+                    </button>
+                </div>
+
+                <!-- Onglet Pâtisserie après l'onglet "Ventes &amp; Achats" -->
+                <page name="sales_purchases" position="after">
+                    <page string="🍰 Pâtisserie" name="bakery_tab">
+                        <group>
+                            <group string="Informations Client Pâtisserie">
+                                <field name="is_bakery_customer"/>
+                                <field name="bakery_order_count"
+                                       readonly="1"
+                                       invisible="not is_bakery_customer"
+                                       string="Nombre de commandes"/>
+                                <field name="bakery_total_spent"
+                                       readonly="1"
+                                       invisible="not is_bakery_customer"
+                                       string="Total dépensé (MAD)"/>
+                            </group>
+                        </group>
+
+                        <!-- Historique des commandes -->
+                        <field name="bakery_order_ids"
+                               invisible="not is_bakery_customer"
+                               readonly="1">
+                            <list>
+                                <field name="name" string="Référence"/>
+                                <field name="date_order" string="Date"/>
+                                <field name="amount_total" string="Total (MAD)"/>
+                                <field name="state" widget="badge"
+                                       decoration-secondary="state == 'draft'"
+                                       decoration-info="state == 'confirmed'"
+                                       decoration-warning="state == 'production'"
+                                       decoration-primary="state == 'ready'"
+                                       decoration-success="state == 'done'"
+                                       decoration-danger="state == 'cancelled'"/>
+                                <field name="invoice_status" widget="badge"
+                                       decoration-success="invoice_status == 'invoiced'"
+                                       decoration-warning="invoice_status == 'partial'"
+                                       decoration-secondary="invoice_status == 'not_invoiced'"
+                                       string="Facturation"/>
+                            </list>
+                        </field>
+                    </page>
+                </page>
+
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE LIST — Clients pâtisserie (menu Clients)
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_customer_list" model="ir.ui.view">
+            <field name="name">bakery.customer.list</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list string="Clients Pâtisserie">
+                    <field name="name" string="Nom"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="city" string="Ville"/>
+                    <field name="bakery_order_count" string="Commandes"/>
+                    <field name="bakery_total_spent"
+                           string="Total dépensé (MAD)"
+                           sum="Total général"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE SEARCH — Clients pâtisserie
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_customer_search" model="ir.ui.view">
+            <field name="name">bakery.customer.search</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher un client">
+                    <field name="name" string="Client"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <filter name="is_bakery" string="Client Pâtisserie"
+                            domain="[('is_bakery_customer', '=', True)]"/>
+                    <group expand="1" string="Grouper par">
+                        <filter name="by_city" string="Ville"
+                                context="{'group_by': 'city'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>
