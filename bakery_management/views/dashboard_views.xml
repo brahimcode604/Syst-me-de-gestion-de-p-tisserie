@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══ Action Dashboard (client action OWL) ════════════════════════ -->
+        <record id="action_bakery_dashboard" model="ir.actions.client">
+            <field name="name">Tableau de bord Pâtisserie</field>
+            <field name="tag">bakery.dashboard</field>
+        </record>
+
+    </data>
+</odoo>
