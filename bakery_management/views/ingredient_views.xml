@@ -1,0 +1,161 @@
+<!-- TODO: optimiser les filtres de recherche -->
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE LIST — Ingrédients
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_ingredient_list" model="ir.ui.view">
+            <field name="name">bakery.ingredient.list</field>
+            <field name="model">bakery.ingredient</field>
+            <field name="arch" type="xml">
+                <list string="Ingrédients"
+                      decoration-danger="stock_status == 'empty'"
+                      decoration-warning="stock_status == 'low'">
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="quantity_on_hand" string="En stock"/>
+                    <field name="unit_of_measure" string="Unité"/>
+                    <field name="minimum_quantity" string="Seuil min."/>
+                    <field name="cost_price" string="Prix unitaire (MAD)"/>
+                    <field name="stock_value" sum="Valeur totale" string="Valeur (MAD)"/>
+                    <field name="supplier_id"/>
+                    <field name="stock_status" widget="badge"
+                           decoration-danger="stock_status == 'empty'"
+                           decoration-warning="stock_status == 'low'"
+                           decoration-success="stock_status == 'ok'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE FORM — Ingrédient
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_ingredient_form" model="ir.ui.view">
+            <field name="name">bakery.ingredient.form</field>
+            <field name="model">bakery.ingredient</field>
+            <field name="arch" type="xml">
+                <form string="Ingrédient">
+                    <header>
+                        <field name="stock_status" widget="statusbar"
+                               statusbar_visible="ok,low,empty"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_add_stock" type="object"
+                                    class="oe_stat_button" icon="fa-cubes"
+                                    string="Modifier le stock"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" string="Nom de l'ingrédient"/>
+                            <h1>
+                                <field name="name" placeholder="Ex : Farine de blé T55"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Informations générales">
+                                <field name="category"/>
+                                <field name="unit_of_measure"/>
+                                <field name="supplier_id"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Stock &amp; Tarification">
+                                <field name="quantity_on_hand"/>
+                                <field name="minimum_quantity"/>
+                                <field name="cost_price"/>
+                                <field name="stock_value" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes" name="notes">
+                                <field name="notes" nolabel="1"
+                                       placeholder="Informations complémentaires sur cet ingrédient..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE KANBAN — Ingrédients
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_ingredient_kanban" model="ir.ui.view">
+            <field name="name">bakery.ingredient.kanban</field>
+            <field name="model">bakery.ingredient</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="quantity_on_hand"/>
+                    <field name="minimum_quantity"/>
+                    <field name="unit_of_measure"/>
+                    <field name="stock_status"/>
+                    <field name="cost_price"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content p-2">
+                                    <div class="o_kanban_record_title mb-1">
+                                        <strong><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                    <small class="text-muted">
+                                        <t t-esc="record.category.value"/>
+                                    </small>
+                                    <hr class="mt-1 mb-1"/>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <b><t t-esc="record.quantity_on_hand.value"/></b>
+                                            <t t-esc="record.unit_of_measure.value"/>
+                                        </span>
+                                        <span t-if="record.stock_status.raw_value == 'empty'"
+                                              class="badge text-bg-danger">Vide</span>
+                                        <span t-elif="record.stock_status.raw_value == 'low'"
+                                              class="badge text-bg-warning">Faible</span>
+                                        <span t-else=""
+                                              class="badge text-bg-success">OK</span>
+                                    </div>
+                                    <div class="text-muted mt-1" style="font-size:12px;">
+                                        Seuil : <t t-esc="record.minimum_quantity.value"/>
+                                        <t t-esc="record.unit_of_measure.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- ══════════════════════════════════════════════════════════════════
+             VUE SEARCH — Ingrédients
+        ═══════════════════════════════════════════════════════════════════ -->
+        <record id="view_bakery_ingredient_search" model="ir.ui.view">
+            <field name="name">bakery.ingredient.search</field>
+            <field name="model">bakery.ingredient</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher un ingrédient">
+                    <field name="name" string="Ingrédient"/>
+                    <field name="supplier_id" string="Fournisseur"/>
+                    <filter name="stock_low"   string="Stock faible" domain="[('stock_status', '=', 'low')]"/>
+                    <filter name="stock_empty" string="Stock vide"   domain="[('stock_status', '=', 'empty')]"/>
+                    <filter name="stock_ok"    string="Stock OK"     domain="[('stock_status', '=', 'ok')]"/>
+                    <separator/>
+                    <filter name="archived" string="Archivés" domain="[('active', '=', False)]"/>
+                    <group expand="1" string="Grouper par">
+                        <filter name="by_category" string="Catégorie"  context="{'group_by': 'category'}"/>
+                        <filter name="by_supplier" string="Fournisseur" context="{'group_by': 'supplier_id'}"/>
+                        <filter name="by_status"   string="État stock"  context="{'group_by': 'stock_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>
