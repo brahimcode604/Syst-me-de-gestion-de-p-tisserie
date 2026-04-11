@@ -1,16 +1,23 @@
-# Systeme de Gestion de Patisserie
+# Systeme de Gestion de Patisserie - Module Odoo 17
 
-Module Odoo 17 pour la gestion complete d'une patisserie.
+Module Odoo complet pour la gestion d'une patisserie.
 
-## Objectifs
+## Fonctionnalites
 
-- Gestion des ingredients et du stock
-- Catalogue de produits avec recettes
-- Gestion des commandes clients
+- Gestion du Stock (Ingredients)
+- Catalogue Produits & Recettes
+- Commandes Clients avec workflow
 - Facturation integree (account.move)
-- Tableau de bord analytique
+- Gestion des Clients
+- Securite par Roles
+
+## Installation
+
+1. Copier bakery_management/ dans le repertoire addons/
+2. Redemarrer Odoo
+3. Installer le module depuis les Applications
 
 ## Prerequis
 
 - Odoo 17.0
-- Python 3.10+
+- Modules : base, mail, account, stock
