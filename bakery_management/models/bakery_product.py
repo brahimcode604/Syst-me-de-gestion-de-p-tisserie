@@ -1,4 +1,3 @@
-# TODO: ajouter tests unitaires pour le calcul du cout
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
