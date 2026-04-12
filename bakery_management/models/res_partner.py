@@ -1,4 +1,3 @@
-# TODO: verifier les performances des champs computed
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
