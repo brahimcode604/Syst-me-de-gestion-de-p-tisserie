@@ -1,4 +1,3 @@
-# TODO: ajouter tests unitaires pour la validation du stock
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
