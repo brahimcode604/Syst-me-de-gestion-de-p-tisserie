@@ -1,0 +1,40 @@
+/* Bakery Dashboard - Styles de base */
+.bk-dashboard {
+    --bk-primary: #c8956c;
+    --bk-bg: #fef9f4;
+    --bk-card-bg: #ffffff;
+    --bk-text: #3d2b1f;
+    --bk-muted: #9b7b6a;
+    --bk-border: #f3dcc7;
+    --bk-radius: 14px;
+
+    padding: 28px;
+    background: linear-gradient(160deg, #fef9f4 0%, #fff4e8 100%);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--bk-text);
+}
+
+.bk-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--bk-border);
+    padding-bottom: 22px;
+}
+
+.bk-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.bk-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+/* TODO: ajouter les styles complets pour cards, table, badges, animations */
