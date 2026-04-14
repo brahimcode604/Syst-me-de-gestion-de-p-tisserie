@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Bakery Management - Systeme de Gestion de Patisserie',
-    'version': '17.0.0.9.0',
+    'name': 'Bakery Management — Système de Gestion de Pâtisserie',
+    'version': '17.0.1.0.0',
     'category': 'Industries',
-    'summary': "Gestion complete d'une patisserie : stock, produits, commandes, facturation & tableau de bord",
-    'description': '''
-        Module de gestion de patisserie pour Odoo 17.
+    'summary': 'Gestion complète d\'une pâtisserie : stock, produits, commandes, facturation & tableau de bord',
+    'description': """
+        Module de gestion de pâtisserie pour Odoo 17.
 
-        Fonctionnalites :
-        - Gestion des ingredients et du stock (alertes seuil minimum)
-        - Catalogue de produits avec recettes et calcul du cout
-        - Commandes clients avec workflow complet (5 etapes)
-        - Facturation integree (account.move) avec suivi du paiement
-        - Extension fiche client (historique, total depense)
-        - Tableau de bord analytique en temps reel (OWL)
-        - Securite par roles (Administrateur / Employe)
-    ''',
+        Fonctionnalités :
+        ─────────────────
+        ✔ Gestion des ingrédients et du stock (alertes seuil minimum)
+        ✔ Catalogue de produits avec recettes et calcul du coût
+        ✔ Commandes clients avec workflow complet (5 étapes)
+        ✔ Facturation intégrée (account.move) avec suivi du paiement
+        ✔ Extension fiche client (historique, total dépensé)
+        ✔ Tableau de bord analytique en temps réel (OWL)
+        ✔ Sécurité par rôles (Administrateur / Employé)
+    """,
     'author': 'Bakery Management',
     'website': '',
     'depends': ['base', 'mail', 'account', 'stock'],
